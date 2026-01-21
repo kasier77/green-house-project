@@ -57,26 +57,43 @@ unsigned int ADC_Read(unsigned char channel) {
 }
 
 // --- LCD Functions ---
-void lcd_enable_pulse(void) { E = 1; __delay_us(1); E = 0; __delay_us(100); }
+void lcd_enable_pulse(void) { E = 1; 
+                             __delay_us(1);
+                             E = 0; 
+                             __delay_us(100); }
 void lcd_send_nibble(unsigned char nibble) {
-    D4 = (nibble >> 0) & 0x01; D5 = (nibble >> 1) & 0x01;
-    D6 = (nibble >> 2) & 0x01; D7 = (nibble >> 3) & 0x01;
+    D4 = (nibble >> 0) & 0x01;
+    D5 = (nibble >> 1) & 0x01;
+    D6 = (nibble >> 2) & 0x01;
+    D7 = (nibble >> 3) & 0x01;
     lcd_enable_pulse();
 }
 void lcd_command_4bit(unsigned char cmd) {
-    RS = 0; lcd_send_nibble(cmd >> 4); lcd_send_nibble(cmd & 0x0F); __delay_ms(2);
+    RS = 0; 
+    lcd_send_nibble(cmd >> 4); 
+    lcd_send_nibble(cmd & 0x0F);
+    __delay_ms(2);
 }
 void lcd_data_4bit(unsigned char data) {
-    RS = 1; lcd_send_nibble(data >> 4); lcd_send_nibble(data & 0x0F); __delay_ms(2);
+    RS = 1;
+    lcd_send_nibble(data >> 4); 
+    lcd_send_nibble(data & 0x0F); 
+    __delay_ms(2);
 }
 void lcd_init_4bit(void) {
     TRISC0 = 0; TRISC1 = 0; TRISD = 0x00;
     __delay_ms(20); RS = 0;
-    lcd_send_nibble(0x03); __delay_ms(5);
-    lcd_send_nibble(0x03); __delay_us(150);
-    lcd_send_nibble(0x03); __delay_us(150);
+    lcd_send_nibble(0x03); 
+    __delay_ms(5);
+    lcd_send_nibble(0x03); 
+    __delay_us(150);
+    lcd_send_nibble(0x03);
+    __delay_us(150);
     lcd_send_nibble(0x02);
-    lcd_command_4bit(0x28); lcd_command_4bit(0x0C); lcd_command_4bit(0x01); lcd_command_4bit(0x06);
+    lcd_command_4bit(0x28); 
+    lcd_command_4bit(0x0C);
+    lcd_command_4bit(0x01); 
+    lcd_command_4bit(0x06);
 }
 void lcd_set_cursor_4bit(unsigned char row, unsigned char col) {
     unsigned char address = (row == 1) ? (0x80 + col) : (0xC0 + col);
@@ -86,8 +103,11 @@ void lcd_string_4bit(const char *str) { while(*str) lcd_data_4bit(*str++); }
 
 // --- DHT11 Functions ---
 void dht11_start(void) {
-    DHT11_DIR = 0; DHT11_PIN = 0; __delay_ms(18);
-    DHT11_PIN = 1; __delay_us(30); DHT11_DIR = 1;
+    DHT11_DIR = 0; DHT11_PIN = 0; 
+    __delay_ms(18);
+    DHT11_PIN = 1; 
+    __delay_us(30);
+    DHT11_DIR = 1;
 }
 unsigned char dht11_read_byte(void) {
     unsigned char i, result = 0;
@@ -124,9 +144,12 @@ void main(void) {
     while(1) {
         
         // --- 1. Tank Level LED Logic (Always On) ---
-        if(LEVEL_LOW)  LED_LOW_TANK = 1; else LED_LOW_TANK = 0;
-        if(LEVEL_MED)  LED_MED_TANK = 1; else LED_MED_TANK = 0;
-        if(LEVEL_HIGH) LED_MAX_TANK = 1; else LED_MAX_TANK = 0;
+        if(LEVEL_LOW)  LED_LOW_TANK = 1; 
+        else LED_LOW_TANK = 0;
+        if(LEVEL_MED)  LED_MED_TANK = 1; 
+        else LED_MED_TANK = 0;
+        if(LEVEL_HIGH) LED_MAX_TANK = 1; 
+        else LED_MAX_TANK = 0;
         
         // --- 1. LDR & LED Logic ---
         if(LDR_DIGITAL == 1) { 
